@@ -2,18 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 import pprint
 
-url = 'http://dedmorozural.ru/novosti'
+# Будем получать данные с сайта ГЭС-2. Поскольку на сайте ничего не понятно, сделаем карту сайта
+url = 'https://v-a-c.org/ges2'
 
-response = requests.get(url)
-# print(response.status_code)
-# print(response.text)
-soup = BeautifulSoup(response.text, 'html.parser')
-# print(soup.title.string)
-# print(soup.a.string)
-# print(soup.p.string)
-# print(soup.a.get('href'))
-news_a = soup.find_all('a')
+response = requests.get(url)  # получаем данные с сайта
+print(response.status_code)
+# pprint.pprint(response.text)
+soup = BeautifulSoup(response.text, 'html.parser')  # делаем из них суп
 
-news_a_class = soup.find_all('a', class_='con_titlelink')
-for one_news in news_a_class:
-    print(one_news.get('href'))
+map_site = {}  # создаем словарь для карты сайта
+links = soup.find_all('a')  # извлекаем  все теги со ссылками
+# pprint.pprint(links)
+
+for link in links:  # для всех элементов получившегося объекта извлекаем название и ссылку
+    text = link.text
+    href = link.get('href')
+    map_site[text] = href  # делаем из них словарь
+pprint.pprint(map_site)  # получаем карту сайта музея без приколов
